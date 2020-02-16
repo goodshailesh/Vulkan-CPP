@@ -21,15 +21,26 @@ const int HEIGHT = 1152;
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
 };
+
+const std::vector<const char*> deviceExtensions = {
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME
+};
+
 struct QueueFamilyIndices {
     std::experimental::optional<uint32_t> graphicsFamily;
     std::experimental::optional<uint32_t> presentFamily;
     bool isComplete() {
         // Commenting it out since "#include <optional>" is still not suported in this version of GCC - missing        // libstdc++ which is part of C++2a - https://en.cppreference.com/w/cpp/compiler_support
-        // https://stackoverflow.com/questions/4600295/what-is-the-meaning-of-operator-bool-const
+        //
         //return graphicsFamily.has_value() && presentFamily.has_value();
         return (graphicsFamily && presentFamily) ;
     }
+};
+
+struct SwapChainSupportDetails {
+    VkSurfaceCapabilitiesKHR capabilities;
+    std::vector<VkSurfaceFormatKHR> formats;
+    std::vector<VkPresentModeKHR> presentModes;
 };
 
 
@@ -50,6 +61,11 @@ class HelloTriangleApplication {
         VkDevice device;
         VkQueue graphicsQueue;
         VkQueue presentQueue;
+
+        VkSwapchainKHR swapChain;
+        std::vector<VkImage> swapChainImages;
+        VkFormat swapChainImageFormat;
+        VkExtent2D swapChainExtent;
 
 
         void initWindow() {
@@ -78,6 +94,16 @@ class HelloTriangleApplication {
         void pickPhysicalDevice();
 
         void createLogicalDevice();
+
+        void createSwapChain();
+
+        VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+
+        VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+
+        VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
+        SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 
         bool isDeviceSuitable(VkPhysicalDevice device);
 
