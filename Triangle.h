@@ -4,6 +4,10 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string.h>
+// Commenting it out since "#include <optional>"" is still not suported in this version of GCC - missing
+// libstdc++ which is part of C++2a - https://en.cppreference.com/w/cpp/compiler_support
+//#include <optional>
+#include <experimental/optional>
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -17,6 +21,15 @@ const int HEIGHT = 1152;
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
 };
+struct QueueFamilyIndices {
+    std::experimental::optional<uint32_t> graphicsFamily;
+    bool isComplete() {
+        // Commenting it out since "#include <optional>" is still not suported in this version of GCC - missing        // libstdc++ which is part of C++2a - https://en.cppreference.com/w/cpp/compiler_support
+        //return graphicsFamily.has_value() : ;
+        return graphicsFamily.value() < 0 ? false : true ;
+    }
+};
+
 
 class HelloTriangleApplication {
     public:
@@ -30,6 +43,7 @@ class HelloTriangleApplication {
         GLFWwindow* window;
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
+        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
         void initWindow() {
             glfwInit();
@@ -51,6 +65,12 @@ class HelloTriangleApplication {
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
         void setupDebugMessenger();
+
+        void pickPhysicalDevice();
+
+        bool isDeviceSuitable(VkPhysicalDevice device);
+
+        QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
         std::vector<const char*> getRequiredExtensions();
 
