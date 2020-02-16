@@ -23,10 +23,12 @@ const std::vector<const char*> validationLayers = {
 };
 struct QueueFamilyIndices {
     std::experimental::optional<uint32_t> graphicsFamily;
+    std::experimental::optional<uint32_t> presentFamily;
     bool isComplete() {
         // Commenting it out since "#include <optional>" is still not suported in this version of GCC - missing        // libstdc++ which is part of C++2a - https://en.cppreference.com/w/cpp/compiler_support
-        //return graphicsFamily.has_value();
-        return graphicsFamily.value() < 0 ? false : true ;
+        // https://stackoverflow.com/questions/4600295/what-is-the-meaning-of-operator-bool-const
+        //return graphicsFamily.has_value() && presentFamily.has_value();
+        return (graphicsFamily && presentFamily) ;
     }
 };
 
@@ -43,9 +45,11 @@ class HelloTriangleApplication {
         GLFWwindow* window;
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
+        VkSurfaceKHR surface;
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
         VkDevice device;
         VkQueue graphicsQueue;
+        VkQueue presentQueue;
 
 
         void initWindow() {
@@ -68,6 +72,8 @@ class HelloTriangleApplication {
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
         void setupDebugMessenger();
+
+        void createSurface();
 
         void pickPhysicalDevice();
 
