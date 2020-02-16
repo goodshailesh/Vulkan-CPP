@@ -66,7 +66,7 @@ class HelloTriangleApplication {
         std::vector<VkImage> swapChainImages;
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
-
+        std::vector<VkImageView> swapChainImageViews;
 
         void initWindow() {
             glfwInit();
@@ -96,6 +96,8 @@ class HelloTriangleApplication {
         void createLogicalDevice();
 
         void createSwapChain();
+
+        void createImageViews();
 
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 
