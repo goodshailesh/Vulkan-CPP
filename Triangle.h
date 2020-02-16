@@ -25,7 +25,7 @@ struct QueueFamilyIndices {
     std::experimental::optional<uint32_t> graphicsFamily;
     bool isComplete() {
         // Commenting it out since "#include <optional>" is still not suported in this version of GCC - missing        // libstdc++ which is part of C++2a - https://en.cppreference.com/w/cpp/compiler_support
-        //return graphicsFamily.has_value() : ;
+        //return graphicsFamily.has_value();
         return graphicsFamily.value() < 0 ? false : true ;
     }
 };
@@ -44,6 +44,9 @@ class HelloTriangleApplication {
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+        VkDevice device;
+        VkQueue graphicsQueue;
+
 
         void initWindow() {
             glfwInit();
@@ -67,6 +70,8 @@ class HelloTriangleApplication {
         void setupDebugMessenger();
 
         void pickPhysicalDevice();
+
+        void createLogicalDevice();
 
         bool isDeviceSuitable(VkPhysicalDevice device);
 
