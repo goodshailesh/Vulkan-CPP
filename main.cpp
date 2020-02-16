@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include "Triangle.h"
 
+
+
 int main() {
     HelloTriangleApplication app;
 
